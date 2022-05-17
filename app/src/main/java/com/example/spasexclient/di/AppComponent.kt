@@ -11,16 +11,3 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(homeViewModel: HomeViewModel)
 }
-
-@Module
-object AppModule {
-
-    @Provides
-    fun provideTest(): Test {
-        return Test()
-    }
-}
-
-class Test {
-     fun test() = "Test test"
-}
