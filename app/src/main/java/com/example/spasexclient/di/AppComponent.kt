@@ -9,10 +9,7 @@ import javax.inject.Singleton
 @Component(modules = [AppModule::class])
 @Singleton
 interface AppComponent {
-
     fun inject(homeViewModel: HomeViewModel)
-
-    val test: Test
 }
 
 @Module
