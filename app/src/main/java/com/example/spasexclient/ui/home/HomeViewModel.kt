@@ -6,19 +6,42 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.spasexclient.appComponent
 import com.example.spasexclient.data.services.FairingsService
+import kotlinx.coroutines.*
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel(application: Application) : AndroidViewModel(application), CoroutineScope {
 
     @Inject
     lateinit var service: FairingsService
+
+    private var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.Main
 
     private val _text = MutableLiveData<String>()
     val text: LiveData<String> = _text
 
     init {
         application.appComponent.inject(this)
-        _text.value = "First"
+        job = Job()
 
+        launch {
+            val result = withContext(Dispatchers.IO) {
+                service.getFairings().execute()
+            }
+            if (result.isSuccessful) {
+                result.body()?.forEach {
+                    _text.value = it.reused.toString()
+                }
+            }
+        }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        job.cancel()
+    }
+
 }
