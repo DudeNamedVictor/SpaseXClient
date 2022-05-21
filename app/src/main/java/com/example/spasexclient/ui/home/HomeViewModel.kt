@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.spasexclient.appComponent
 import com.example.spasexclient.data.services.FairingsService
-import com.example.spasexclient.domain.MainUseCase
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -30,7 +29,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application), C
 
         launch {
             val result = withContext(Dispatchers.IO) {
-                MainUseCase(service).getFairings()
+                HomeUseCase(service).getFairings()
             }
             if (result.isSuccessful) {
                 _text.value = result.body()?.get(0)?.reused.toString()

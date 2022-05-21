@@ -1,7 +1,7 @@
 package com.example.spasexclient.di.modules
 
 import com.example.spasexclient.data.services.FairingsService
-import com.example.spasexclient.utils.Constants.BASE_URL
+import com.example.spasexclient.data.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
