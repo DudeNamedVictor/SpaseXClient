@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spasexclient.appComponent
 import com.example.spasexclient.data.services.FairingsService
 import com.example.spasexclient.databinding.FragmentHomeBinding
@@ -32,13 +33,15 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         activity?.appComponent?.inject(this)
 
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.text.observe(viewLifecycleOwner, {
-            binding.textHome.text = it
+            binding.recyclerView.adapter = HomeAdapter(it)
         })
     }
 

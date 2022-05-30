@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Victor/AndroidStudioProjects/SpaseXClient/app/src/main/res/layout/fragment_home.xml" value="0.176" />
+        <entry key="..\:/Users/Victor/AndroidStudioProjects/SpaseXClient/app/src/main/res/layout/home_item.xml" value="0.12082066869300911" />
         <entry key="..\:/Users/Victor/AndroidStudioProjects/SpaseXclient/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
       </map>
     </option>
