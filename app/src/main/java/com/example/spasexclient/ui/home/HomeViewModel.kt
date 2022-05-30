@@ -1,45 +1,36 @@
 package com.example.spasexclient.ui.home
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.spasexclient.appComponent
+import androidx.lifecycle.*
 import com.example.spasexclient.data.services.FairingsService
-import kotlinx.coroutines.*
-import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class HomeViewModel(application: Application) : AndroidViewModel(application), CoroutineScope {
+class HomeViewModel(service: FairingsService) : ViewModel() {
 
-    @Inject
-    lateinit var service: FairingsService
-
-    private var job: Job
-
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
-
-    private val _text = MutableLiveData<String>()
-    val text: LiveData<String> = _text
+    private val _textMLD = MutableLiveData<String>()
+    val text: LiveData<String> = _textMLD
 
     init {
-        application.appComponent.inject(this)
-        job = Job()
-
-        launch {
+        viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 HomeUseCase(service).getFairings()
             }
             if (result.isSuccessful) {
-                _text.value = result.body()?.get(0)?.reused.toString()
+                _textMLD.value = result.body()?.get(0)?.reused.toString()
             }
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        job.cancel()
+    class BooksViewModelFactory(
+        private val service: FairingsService
+    ) :
+        ViewModelProvider.NewInstanceFactory() {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return HomeViewModel(service) as T
+        }
     }
 
 }
