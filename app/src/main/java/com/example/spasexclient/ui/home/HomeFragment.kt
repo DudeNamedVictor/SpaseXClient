@@ -8,22 +8,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spasexclient.appComponent
-import com.example.spasexclient.data.services.FairingsService
 import com.example.spasexclient.databinding.FragmentHomeBinding
-import javax.inject.Inject
 
 
 class HomeFragment : Fragment() {
 
-    @Inject
-    lateinit var service: FairingsService
-
     private var _binding: FragmentHomeBinding? = null
+    private val viewModel: HomeViewModel by viewModels {
+        activity?.appComponent!!.homeViewModelFactory()
+    }
 
     private val binding get() = _binding!!
-    private val viewModel: HomeViewModel by viewModels {
-        HomeViewModel.BooksViewModelFactory(service)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +26,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        activity?.appComponent?.inject(this)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -40,6 +34,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel.text.observe(viewLifecycleOwner, {
             binding.recyclerView.adapter = HomeAdapter(it)
         })

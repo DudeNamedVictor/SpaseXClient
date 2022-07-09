@@ -6,8 +6,10 @@ import com.example.spasexclient.data.services.FairingsService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Provider
 
-class HomeViewModel(service: FairingsService) : ViewModel() {
+class HomeViewModel @Inject constructor(service: FairingsService) : ViewModel() {
 
     private val _textMLD = MutableLiveData<List<Fairings>>()
     val text: LiveData<List<Fairings>> = _textMLD
@@ -23,14 +25,15 @@ class HomeViewModel(service: FairingsService) : ViewModel() {
         }
     }
 
-    class BooksViewModelFactory(
-        private val service: FairingsService
-    ) :
-        ViewModelProvider.NewInstanceFactory() {
+    class HomeViewModelFactory @Inject constructor(
+        myViewModelProvider: Provider<HomeViewModel>
+    ) : ViewModelProvider.Factory {
+        private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
+            HomeViewModel::class.java to myViewModelProvider
+        )
 
-        @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return HomeViewModel(service) as T
+            return providers[modelClass]!!.get() as T
         }
     }
 

@@ -9,5 +9,5 @@ import javax.inject.Singleton
 @Component(modules = [NetworkModule::class])
 @Singleton
 interface AppComponent {
-    fun inject(homeFragment: HomeFragment)
+    fun homeViewModelFactory(): HomeViewModel.HomeViewModelFactory
 }
